@@ -368,7 +368,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
           </span>
         </button>
         <p className="text-xs pb-4" style={{ color: 'var(--text-secondary)' }}>
-          See the quick guide on creating a habit and logging progress again.
+          See the welcome screen and the guide on creating a habit and logging progress again.
         </p>
 
         {/* Footer */}
