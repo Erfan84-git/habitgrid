@@ -125,20 +125,43 @@ export default function Settings({ onBack, onReplayTour }: Props) {
           style={{ backgroundColor: 'var(--surface)', border: `1px solid ${isPro ? 'var(--accent)' : 'var(--border)'}` }}
         >
           {isPro ? (
-            <div className="flex items-center gap-3">
-              <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8l3.5 3.5L13 4" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8l3.5 3.5L13 4" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>You're Pro ✨</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                    Thanks for backing HabitGrid — everything's unlocked for good.
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Pro active</p>
-                {licenseKey && (
+
+              <div className="flex flex-col gap-1.5 mb-3">
+                {['Unlimited habits', 'Every colour + custom picker', 'Combined grid & sharing'].map((f) => (
+                  <div key={f} className="flex items-center gap-2">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, color: 'var(--accent)' }}>
+                      <path d="M3 8l3.5 3.5L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="text-xs" style={{ color: 'var(--text-primary)' }}>{f}</span>
+                  </div>
+                ))}
+              </div>
+
+              {licenseKey && (
+                <div className="pt-3" style={{ borderTop: '1px solid var(--border)' }}>
+                  <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>License key</p>
                   <p className="text-xs mt-0.5 font-mono" style={{ color: 'var(--text-secondary)' }}>
                     {licenseKey.slice(0, 8)}••••••••
                   </p>
-                )}
-              </div>
+                  <p className="text-xs mt-1.5" style={{ color: 'var(--text-secondary)', opacity: 0.8 }}>
+                    Keep it safe — it re-activates Pro on any device.
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div>
@@ -199,7 +222,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
           <p className="text-sm font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
             Grid colour
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(9, 1fr)', gap: '8px', justifyItems: 'center', alignItems: 'center' }}>
             {PRESETS.map((color) => {
               const locked = !isPro && color !== DEFAULT_COLOR
               return (
@@ -208,10 +231,10 @@ export default function Settings({ onBack, onReplayTour }: Props) {
                   onClick={() => locked ? setShowUpgrade(true) : setAccentColor(color)}
                   aria-label={color}
                   style={{
-                    width: '30px', height: '30px', borderRadius: '50%',
+                    width: '100%', aspectRatio: '1', maxWidth: '30px', borderRadius: '50%',
                     backgroundColor: color, border: 'none', cursor: 'pointer',
                     outline: accentColor === color ? `3px solid ${color}` : '3px solid transparent',
-                    outlineOffset: '2px', flexShrink: 0,
+                    outlineOffset: '2px',
                     position: 'relative', opacity: locked ? 0.4 : 1,
                   }}
                 >
@@ -227,7 +250,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
             })}
             {/* Custom colour picker */}
             {isPro ? (
-              <label style={{ cursor: 'pointer', position: 'relative', flexShrink: 0 }}>
+              <label style={{ cursor: 'pointer', position: 'relative', width: '100%', aspectRatio: '1', maxWidth: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <input
                   type="color"
                   value={accentColor}
@@ -235,7 +258,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
                   style={{ opacity: 0, position: 'absolute', width: 0, height: 0 }}
                 />
                 <div style={{
-                  width: '30px', height: '30px', borderRadius: '50%',
+                  width: '100%', aspectRatio: '1', borderRadius: '50%',
                   background: 'conic-gradient(hsl(0,100%,60%),hsl(45,100%,60%),hsl(90,100%,60%),hsl(135,100%,60%),hsl(180,100%,60%),hsl(225,100%,60%),hsl(270,100%,60%),hsl(315,100%,60%),hsl(360,100%,60%))',
                   outline: isCustom ? '3px solid white' : '3px solid transparent',
                   outlineOffset: '2px',
@@ -245,8 +268,8 @@ export default function Settings({ onBack, onReplayTour }: Props) {
               <button
                 onClick={() => setShowUpgrade(true)}
                 style={{
-                  width: '30px', height: '30px', borderRadius: '50%', border: 'none',
-                  cursor: 'pointer', flexShrink: 0, position: 'relative', opacity: 0.4,
+                  width: '100%', aspectRatio: '1', maxWidth: '30px', borderRadius: '50%', border: 'none',
+                  cursor: 'pointer', position: 'relative', opacity: 0.4,
                   background: 'conic-gradient(hsl(0,100%,60%),hsl(45,100%,60%),hsl(90,100%,60%),hsl(135,100%,60%),hsl(180,100%,60%),hsl(225,100%,60%),hsl(270,100%,60%),hsl(315,100%,60%),hsl(360,100%,60%))',
                 }}
               >
