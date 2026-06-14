@@ -240,13 +240,6 @@ export default function App() {
           onBack={() => setScreen('grid')}
           onReplayTour={() => { setScreen('grid'); setPeriod('current'); setReplayOnboarding(true) }}
         />
-        <FAB onPress={() => setShowAddModal(true)} />
-        {showAddModal && (
-          <AddHabitModal
-            onClose={() => setShowAddModal(false)}
-            onAdded={() => { setShowAddModal(false); setScreen('grid') }}
-          />
-        )}
         {coachmark}
       </>
     )
