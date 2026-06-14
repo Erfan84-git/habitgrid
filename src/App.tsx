@@ -46,11 +46,11 @@ function HabitCard({
 
   return (
     <div
-      className="rounded-xl px-4 pt-4 pb-3 min-w-0 max-w-full overflow-hidden"
+      className="rounded-xl px-4 pt-3 pb-3 min-w-0 max-w-full overflow-hidden"
       style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
     >
       {/* Name + checkbox on its own row so long titles never truncate early */}
-      <div className="flex items-center gap-2 mb-3 min-w-0">
+      <div className="flex items-center gap-2 mb-2 min-w-0">
         {period === 'current' && (
           <button
             onClick={() => toggleLog(today, habitId)}
@@ -86,7 +86,7 @@ function HabitCard({
       </div>
 
       {/* Stats row */}
-      <div className="flex items-center gap-6 mb-3">
+      <div className="flex items-center gap-6 mb-2.5">
         <div>
           <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Active days</p>
           <p className="text-sm font-semibold font-mono" style={{ color: 'var(--text-primary)' }}>{activeDays}</p>
@@ -231,7 +231,7 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-dvh" style={{ backgroundColor: 'var(--bg)' }}>
       {/* Header */}
-      <header className="flex items-center justify-between px-4 pt-safe-top py-4">
+      <header className="flex items-center justify-between px-4 pt-safe-top py-3">
         <h1
           className="text-xl font-semibold tracking-tight"
           style={{ color: 'var(--text-primary)', fontFamily: '"DM Mono", monospace' }}
@@ -347,7 +347,7 @@ export default function App() {
       )}
 
       {activeHabits.length > 0 ? (
-        <div className="flex flex-col gap-5 px-4 pb-24 min-w-0">
+        <div className="flex flex-col gap-4 px-4 pb-24 min-w-0">
           {activeHabits.map((habit, i) => (
             <HabitCard
               key={habit.id}

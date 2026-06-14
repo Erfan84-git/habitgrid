@@ -64,15 +64,17 @@ export default function HabitGrid({ habitId, period, accentColor, onToggle }: Pr
     scrollRef.current.scrollLeft = scrollRef.current.scrollWidth
   }, [period])
 
-  const CELL = 13
-  const GAP = 3
-  const MONTH_GAP = 5
+  const CELL = 12
+  const GAP = 2
+  const MONTH_GAP = 4
 
   return (
     <div
       ref={scrollRef}
       className="overflow-x-auto scrollbar-none"
-      style={{ WebkitOverflowScrolling: 'touch', minWidth: 0, maxWidth: '100%' }}
+      // Right/bottom/top padding leaves room for the "yesterday" cell outline,
+      // which sits outside the cell and would otherwise be clipped by overflow.
+      style={{ WebkitOverflowScrolling: 'touch', minWidth: 0, maxWidth: '100%', padding: '3px 3px 3px 0' }}
     >
       <div className="inline-flex gap-0">
         {/* Day labels */}
