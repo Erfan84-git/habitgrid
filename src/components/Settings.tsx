@@ -370,8 +370,29 @@ export default function Settings({ onBack, onReplayTour }: Props) {
             Replay the walkthrough
           </span>
         </button>
-        <p className="text-xs pb-4" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-xs pb-6" style={{ color: 'var(--text-secondary)' }}>
           See the welcome screen and the guide on creating a habit and logging progress again.
+        </p>
+
+        {/* Contact */}
+        <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
+          FEEDBACK
+        </p>
+        <a
+          href="mailto:aruna.maurya12@gmail.com?subject=HabitGrid%20feedback"
+          className="w-full flex items-center gap-3 rounded-xl px-4 py-3.5 mb-2 text-left no-underline"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0, color: 'var(--accent)' }}>
+            <rect x="2" y="3.5" width="14" height="11" rx="2" stroke="currentColor" strokeWidth="1.6" />
+            <path d="M3 5l6 4.5L15 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+            Contact the builder
+          </span>
+        </a>
+        <p className="text-xs pb-4" style={{ color: 'var(--text-secondary)' }}>
+          Found a bug or have an idea? I'd love to hear it.
         </p>
 
         {/* Footer */}
