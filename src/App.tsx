@@ -475,7 +475,8 @@ function FAB({ onPress }: { onPress: () => void }) {
       style={{
         position: 'fixed',
         bottom: '28px',
-        right: '20px',
+        // Stay 20px inside the centered 480px column, not the viewport edge
+        right: 'max(20px, calc((100vw - 480px) / 2 + 20px))',
         width: '52px',
         height: '52px',
         borderRadius: '50%',
