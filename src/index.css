@@ -65,6 +65,15 @@ input, textarea, select {
   --accent-bright: #39d353;
 }
 
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --border: #d0d7de;
+  --border-muted: #afb8c1;
+  --text-primary: #1f2328;
+  --text-secondary: #59636e;
+}
+
 body {
   margin: 0;
   background-color: var(--bg);

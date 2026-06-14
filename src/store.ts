@@ -24,6 +24,7 @@ interface HabitStore {
   logs: Logs
   streak: StreakInfo
   accentColor: string
+  theme: 'dark' | 'light'
   userName: string
   isPro: boolean
   licenseKey: string | null
@@ -40,6 +41,7 @@ interface HabitStore {
   toggleLog: (date: string, habitId: string) => void
   recalculateStreak: () => void
   setAccentColor: (color: string) => void
+  setTheme: (theme: 'dark' | 'light') => void
   setUserName: (name: string) => void
 }
 
@@ -96,6 +98,7 @@ export const useStore = create<HabitStore>()(
       logs: {},
       streak: { current: 0, longest: 0 },
       accentColor: '#39d353',
+      theme: 'dark',
       userName: '',
       isPro: false,
       licenseKey: null,
@@ -158,6 +161,7 @@ export const useStore = create<HabitStore>()(
       },
 
       setAccentColor: (color) => set({ accentColor: color }),
+      setTheme: (theme) => set({ theme }),
       setUserName: (name) => set({ userName: name.trim() }),
     }),
     { name: 'habitgrid-storage' }

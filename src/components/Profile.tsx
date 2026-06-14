@@ -23,6 +23,7 @@ export default function Profile({ onBack }: Props) {
   const {
     userName, setUserName,
     accentColor, setAccentColor,
+    theme, setTheme,
     isPro, habits, logs, streak, recalculateStreak,
   } = useStore()
   const [name, setName] = useState(userName)
@@ -119,6 +120,44 @@ export default function Profile({ onBack }: Props) {
         <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
           APPEARANCE
         </p>
+
+        {/* Theme toggle */}
+        <div
+          className="rounded-xl px-4 py-4 mb-3 flex items-center justify-between gap-3"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Theme</p>
+          <div
+            style={{ display: 'flex', borderRadius: 9, padding: 2, backgroundColor: 'var(--bg)', border: '1px solid var(--border)' }}
+          >
+            {(['dark', 'light'] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTheme(t)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  padding: '6px 12px', borderRadius: 7, border: 'none', cursor: 'pointer',
+                  fontSize: 13, fontWeight: 600, textTransform: 'capitalize',
+                  backgroundColor: theme === t ? 'var(--accent)' : 'transparent',
+                  color: theme === t ? '#000' : 'var(--text-secondary)',
+                }}
+              >
+                {t === 'dark' ? (
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M13.5 9.5A5.5 5.5 0 016.5 2.5a5.5 5.5 0 107 7z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+                  </svg>
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.4" />
+                    <path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M12.6 3.4l-1 1M4.4 11.6l-1 1" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                  </svg>
+                )}
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div
           data-tour="colours"
           className="rounded-xl px-4 py-4 mb-6"
@@ -165,7 +204,7 @@ export default function Profile({ onBack }: Props) {
                 <div style={{
                   width: '100%', aspectRatio: '1', borderRadius: '50%',
                   background: 'conic-gradient(hsl(0,100%,60%),hsl(45,100%,60%),hsl(90,100%,60%),hsl(135,100%,60%),hsl(180,100%,60%),hsl(225,100%,60%),hsl(270,100%,60%),hsl(315,100%,60%),hsl(360,100%,60%))',
-                  outline: isCustom ? '3px solid white' : '3px solid transparent',
+                  outline: isCustom ? '3px solid var(--text-primary)' : '3px solid transparent',
                   outlineOffset: '2px',
                 }} />
               </label>

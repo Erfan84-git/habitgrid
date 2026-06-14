@@ -119,7 +119,7 @@ function HabitCard({
 }
 
 export default function App() {
-  const { habits, logs, accentColor, userName, isPro, lastBackedUp, setLastBackedUp, hasSeenOnboarding, setHasSeenOnboarding } = useStore()
+  const { habits, logs, accentColor, theme, userName, isPro, lastBackedUp, setLastBackedUp, hasSeenOnboarding, setHasSeenOnboarding } = useStore()
   const [screen, setScreen] = useState<Screen>('grid')
   const [period, setPeriod] = useState<Period>('current')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -146,6 +146,13 @@ export default function App() {
     document.documentElement.style.setProperty('--accent', safeAccent)
     document.documentElement.style.setProperty('--accent-bright', safeAccent)
   }, [accentColor])
+
+  // Apply light/dark theme via a data attribute on the root element
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#ffffff' : '#0D1117')
+  }, [theme])
 
   // Close menu on outside click
   useEffect(() => {
