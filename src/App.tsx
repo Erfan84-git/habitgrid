@@ -138,7 +138,9 @@ export default function App() {
 
   const activeHabits = habits.filter((h) => h.active)
   const currentYear = new Date().getFullYear()
-  const yearOptions = [currentYear, currentYear - 1, currentYear - 2, currentYear - 3]
+  // App launched in 2026, so there's no data before 2025 — show 2025 up to now.
+  const FIRST_YEAR = 2025
+  const yearOptions = Array.from({ length: currentYear - FIRST_YEAR + 1 }, (_, i) => currentYear - i)
 
   // Sync accent color to CSS variables — validate hex first to prevent CSS injection
   const safeAccent = /^#[0-9a-fA-F]{6}$/.test(accentColor) ? accentColor : '#39d353'
