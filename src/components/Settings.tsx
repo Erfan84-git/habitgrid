@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react'
-import { useStore, Habit, FREE_HABIT_LIMIT, formatDate } from '../store'
+import { useStore, Habit, FREE_HABIT_LIMIT, NAME_MAX, formatDate } from '../store'
 import UpgradeModal from './UpgradeModal'
 import { exportBackup, importBackup, daysSinceBackup } from '../utils/backup'
 
@@ -22,7 +22,7 @@ const PRESETS = [
 const DEFAULT_COLOR = '#39d353'
 
 export default function Settings({ onBack, onReplayTour }: Props) {
-  const { habits, accentColor, deleteHabit, reorderHabits, setAccentColor, isPro, licenseKey, setIsPro, setLicenseKey, lastBackedUp, setLastBackedUp } = useStore()
+  const { habits, accentColor, renameHabit, deleteHabit, reorderHabits, setAccentColor, isPro, licenseKey, setIsPro, setLicenseKey, lastBackedUp, setLastBackedUp } = useStore()
   const dragItem = useRef<number | null>(null)
   const dragOver = useRef<number | null>(null)
   const [showUpgrade, setShowUpgrade] = useState(false)
@@ -280,6 +280,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
               <HabitRow
                 key={habit.id}
                 habit={habit}
+                onRename={(name) => renameHabit(habit.id, name)}
                 onDelete={() => deleteHabit(habit.id)}
                 onDragStart={() => handleDragStart(idx)}
                 onDragEnter={() => handleDragEnter(idx)}
@@ -433,16 +434,30 @@ export default function Settings({ onBack, onReplayTour }: Props) {
 
 interface HabitRowProps {
   habit: Habit
+  onRename: (name: string) => void
   onDelete: () => void
   onDragStart: () => void
   onDragEnter: () => void
   onDragEnd: () => void
 }
 
-function HabitRow({ habit, onDelete, onDragStart, onDragEnter, onDragEnd }: HabitRowProps) {
+function HabitRow({ habit, onRename, onDelete, onDragStart, onDragEnter, onDragEnd }: HabitRowProps) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(habit.name)
+
+  function save() {
+    const trimmed = draft.trim()
+    if (trimmed && trimmed !== habit.name) onRename(trimmed)
+    setEditing(false)
+  }
+  function cancel() {
+    setDraft(habit.name)
+    setEditing(false)
+  }
+
   return (
     <div
-      draggable
+      draggable={!editing}
       onDragStart={onDragStart}
       onDragEnter={onDragEnter}
       onDragEnd={onDragEnd}
@@ -450,7 +465,7 @@ function HabitRow({ habit, onDelete, onDragStart, onDragEnter, onDragEnd }: Habi
       className="flex items-center gap-3 px-3 py-3 rounded-lg"
       style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
     >
-      <div className="cursor-grab" style={{ color: 'var(--border-muted)' }}>
+      <div className="cursor-grab" style={{ color: 'var(--border-muted)', opacity: editing ? 0.3 : 1 }}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
           <rect x="4" y="4" width="3" height="3" rx="1" />
           <rect x="9" y="4" width="3" height="3" rx="1" />
@@ -458,17 +473,70 @@ function HabitRow({ habit, onDelete, onDragStart, onDragEnter, onDragEnd }: Habi
           <rect x="9" y="9" width="3" height="3" rx="1" />
         </svg>
       </div>
-      <span className="flex-1 text-sm" style={{ color: 'var(--text-primary)' }}>
-        {habit.name}
-      </span>
-      <button
-        onClick={onDelete}
-        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--text-secondary)' }}
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
-      </button>
+
+      {editing ? (
+        <input
+          type="text"
+          value={draft}
+          autoFocus
+          maxLength={NAME_MAX}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') save()
+            else if (e.key === 'Escape') cancel()
+          }}
+          onBlur={save}
+          className="flex-1 text-sm rounded-md px-2 py-1 outline-none"
+          style={{
+            backgroundColor: 'var(--bg)',
+            border: '1px solid var(--accent)',
+            color: 'var(--text-primary)',
+            minWidth: 0,
+          }}
+        />
+      ) : (
+        <button
+          onClick={() => { setDraft(habit.name); setEditing(true) }}
+          className="flex-1 text-sm text-left truncate"
+          style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'text', padding: 0, minWidth: 0 }}
+        >
+          {habit.name}
+        </button>
+      )}
+
+      {editing ? (
+        <button
+          onMouseDown={(e) => e.preventDefault()} /* keep input focus so onBlur->save wins */
+          onClick={save}
+          aria-label="Save name"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--accent)' }}
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      ) : (
+        <>
+          <button
+            onClick={() => { setDraft(habit.name); setEditing(true) }}
+            aria-label="Edit name"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--text-secondary)' }}
+          >
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+              <path d="M11.5 2.5a1.4 1.4 0 012 2L5 13l-3 1 1-3 8.5-8.5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button
+            onClick={onDelete}
+            aria-label="Delete habit"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--text-secondary)' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </>
+      )}
     </div>
   )
 }

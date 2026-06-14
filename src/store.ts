@@ -34,6 +34,7 @@ interface HabitStore {
   setLastBackedUp: (date: string) => void
   setHasSeenOnboarding: () => void
   addHabit: (name: string, notes?: string) => void
+  renameHabit: (id: string, name: string) => void
   deleteHabit: (id: string) => void
   reorderHabits: (habits: Habit[]) => void
   toggleLog: (date: string, habitId: string) => void
@@ -119,6 +120,14 @@ export const useStore = create<HabitStore>()(
           }
           return { habits: [...s.habits, habit] }
         })
+      },
+
+      renameHabit: (id, name) => {
+        const trimmed = name.trim().slice(0, NAME_MAX)
+        if (!trimmed) return
+        set((s) => ({
+          habits: s.habits.map((h) => (h.id === id ? { ...h, name: trimmed } : h)),
+        }))
       },
 
       deleteHabit: (id) => {
