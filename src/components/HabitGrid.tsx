@@ -47,21 +47,30 @@ export default function HabitGrid({ habitId, period, accentColor, onToggle }: Pr
   yesterday.setDate(yesterday.getDate() - 1)
   const yesterdayStr = period === 'current' ? formatDate(yesterday) : null
 
-  const blocks = []
+  const blocks: ReturnType<typeof buildMonthBlock>[] = []
+  const todayStr = formatDate(today)
+  // Drop the trailing all-future weeks of the latest month so the grid ends at
+  // today instead of reserving empty space for days that can't be logged yet.
+  const trimLastToToday = () => {
+    const last = blocks[blocks.length - 1]
+    if (last) last.columns = last.columns.filter((col) => col.some((cell) => cell !== null && cell.date <= todayStr))
+  }
+
   if (period === 'current') {
     for (let i = 12; i >= 0; i--) {
       const d = new Date(today.getFullYear(), today.getMonth() - i, 1)
       blocks.push(buildMonthBlock(d.getFullYear(), d.getMonth()))
     }
-    // Drop the current month's all-future weeks so the grid ends at today
-    // instead of reserving empty space for days that can't be logged yet.
-    const todayStr = formatDate(today)
-    const last = blocks[blocks.length - 1]
-    last.columns = last.columns.filter((col) => col.some((cell) => cell !== null && cell.date <= todayStr))
+    trimLastToToday()
   } else {
-    for (let m = 0; m < 12; m++) {
+    // For the current year, stop at the current month so we don't render empty
+    // future months (Jul–Dec); past years show the full Jan–Dec.
+    const isCurrentYear = period === today.getFullYear()
+    const lastMonth = isCurrentYear ? today.getMonth() : 11
+    for (let m = 0; m <= lastMonth; m++) {
       blocks.push(buildMonthBlock(period as number, m))
     }
+    if (isCurrentYear) trimLastToToday()
   }
 
   useEffect(() => {

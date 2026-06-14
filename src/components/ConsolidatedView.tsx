@@ -43,16 +43,26 @@ export default function ConsolidatedView({ period, onBack }: Props) {
   const activeHabits = habits.filter((h) => h.active)
   const today = new Date()
 
-  const blocks = []
+  const blocks: ReturnType<typeof buildMonthBlock>[] = []
+  const todayStr = formatDate(today)
+  const trimLastToToday = () => {
+    const last = blocks[blocks.length - 1]
+    if (last) last.columns = last.columns.filter((col) => col.some((cell) => cell !== null && cell.date <= todayStr))
+  }
+
   if (period === 'current') {
     for (let i = 11; i >= 0; i--) {
       const d = new Date(today.getFullYear(), today.getMonth() - i, 1)
       blocks.push(buildMonthBlock(d.getFullYear(), d.getMonth()))
     }
+    trimLastToToday()
   } else {
-    for (let m = 0; m < 12; m++) {
+    const isCurrentYear = period === today.getFullYear()
+    const lastMonth = isCurrentYear ? today.getMonth() : 11
+    for (let m = 0; m <= lastMonth; m++) {
       blocks.push(buildMonthBlock(period as number, m))
     }
+    if (isCurrentYear) trimLastToToday()
   }
 
   useEffect(() => {
