@@ -6,7 +6,7 @@ export interface TourStep {
   body: string
   index: number
   total: number
-  screen?: 'grid' | 'settings'
+  screen?: 'grid' | 'settings' | 'profile'
 }
 
 /**

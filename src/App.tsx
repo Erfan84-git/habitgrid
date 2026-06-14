@@ -197,7 +197,7 @@ export default function App() {
       setScreen('grid')
       return
     }
-    setScreen(TOUR_STEPS[next - 1].screen === 'settings' ? 'settings' : 'grid')
+    setScreen((TOUR_STEPS[next - 1].screen ?? 'grid') as Screen)
     setTourStep(next)
   }
   const tourSkip = () => { setTourStep(0); setScreen('grid') }
@@ -246,7 +246,12 @@ export default function App() {
   }
 
   if (screen === 'profile') {
-    return <Profile onBack={() => setScreen('grid')} />
+    return (
+      <>
+        <Profile onBack={() => setScreen('grid')} />
+        {coachmark}
+      </>
+    )
   }
 
   if (screen === 'consolidated') {
@@ -491,10 +496,10 @@ const TOUR_STEPS: TourStep[] = [
     total: 6,
   },
   {
-    screen: 'settings',
+    screen: 'profile',
     selector: '[data-tour="colours"]',
     title: 'Make it yours',
-    body: 'Pro unlocks the full colour palette and a custom picker for your grid.',
+    body: 'In Profile, Pro unlocks the full colour palette and a custom picker for your grid.',
     index: 4,
     total: 6,
   },
