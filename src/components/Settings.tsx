@@ -5,10 +5,9 @@ import { exportBackup, importBackup, daysSinceBackup } from '../utils/backup'
 
 interface Props {
   onBack: () => void
-  onReplayTour: () => void
 }
 
-export default function Settings({ onBack, onReplayTour }: Props) {
+export default function Settings({ onBack }: Props) {
   const { isPro, licenseKey, setIsPro, setLicenseKey, lastBackedUp, setLastBackedUp } = useStore()
   const [showUpgrade, setShowUpgrade] = useState(false)
   const [importError, setImportError] = useState<string | null>(null)
@@ -277,26 +276,6 @@ export default function Settings({ onBack, onReplayTour }: Props) {
 
         <p className="text-xs pb-6" style={{ color: 'var(--text-secondary)' }}>
           Save the file to iCloud Drive or Google Drive. Restoring will replace all current data.
-        </p>
-
-        {/* Getting started */}
-        <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
-          GETTING STARTED
-        </p>
-        <button
-          onClick={onReplayTour}
-          className="w-full flex items-center gap-3 rounded-xl px-4 py-3.5 mb-2 text-left"
-          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', cursor: 'pointer' }}
-        >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0, color: 'var(--accent)' }}>
-            <path d="M15 9A6 6 0 113.3 6.5M3 3v3.5h3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-            Replay the walkthrough
-          </span>
-        </button>
-        <p className="text-xs pb-6" style={{ color: 'var(--text-secondary)' }}>
-          See the welcome screen and the guide on creating a habit and logging progress again.
         </p>
 
         {/* Contact */}

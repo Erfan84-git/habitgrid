@@ -129,8 +129,6 @@ export default function App() {
   const [dismissedBackupBanner, setDismissedBackupBanner] = useState(false)
   // Guided tour: 0 = inactive, 1 = create a habit, 2 = log progress
   const [tourStep, setTourStep] = useState(0)
-  // Force the welcome screen to show again (replay), even though it's seen once
-  const [replayOnboarding, setReplayOnboarding] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
   const backupDays = daysSinceBackup(lastBackedUp)
@@ -226,10 +224,10 @@ export default function App() {
     return <SplashScreen onDone={() => setShowSplash(false)} accentColor={accentColor} />
   }
 
-  if (!hasSeenOnboarding || replayOnboarding) {
+  if (!hasSeenOnboarding) {
     return (
       <OnboardingScreen
-        onDone={() => { setHasSeenOnboarding(); setReplayOnboarding(false); setTourStep(1) }}
+        onDone={() => { setHasSeenOnboarding(); setTourStep(1) }}
         accentColor={safeAccent}
       />
     )
@@ -238,10 +236,7 @@ export default function App() {
   if (screen === 'settings') {
     return (
       <>
-        <Settings
-          onBack={() => setScreen('grid')}
-          onReplayTour={() => { setScreen('grid'); setPeriod('current'); setReplayOnboarding(true) }}
-        />
+        <Settings onBack={() => setScreen('grid')} />
         {coachmark}
       </>
     )
