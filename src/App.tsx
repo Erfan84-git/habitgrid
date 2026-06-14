@@ -185,9 +185,33 @@ export default function App() {
       !tourBaseline.current.logged &&
       activeHabits.some((h) => logs[todayStr]?.[h.id])
     ) {
-      setTourStep(0)
+      setTourStep(3)
     }
   }, [tourStep, logs, todayStr])
+
+  // Advance / end the tour, moving to the screen the next step lives on.
+  const tourNext = () => {
+    const next = tourStep + 1
+    if (next > TOUR_STEPS.length) {
+      setTourStep(0)
+      setScreen('grid')
+      return
+    }
+    setScreen(TOUR_STEPS[next - 1].screen === 'settings' ? 'settings' : 'grid')
+    setTourStep(next)
+  }
+  const tourSkip = () => { setTourStep(0); setScreen('grid') }
+
+  const tourActive = tourStep > 0 && !showAddModal && !showUpgrade && !menuOpen
+  const coachmark = tourActive ? (
+    <Coachmark
+      step={TOUR_STEPS[tourStep - 1]}
+      onSkip={tourSkip}
+      // Step 1 has no "Next" for a brand-new user — they must tap + first.
+      onNext={tourStep === 1 && activeHabits.length === 0 ? undefined : tourNext}
+      nextLabel={tourStep === TOUR_STEPS.length ? 'Done' : 'Next'}
+    />
+  ) : null
 
   if (showSplash) {
     return <SplashScreen onDone={() => setShowSplash(false)} accentColor={accentColor} />
@@ -216,6 +240,7 @@ export default function App() {
             onAdded={() => { setShowAddModal(false); setScreen('grid') }}
           />
         )}
+        {coachmark}
       </>
     )
   }
@@ -362,6 +387,7 @@ export default function App() {
           {activeHabits.length >= 2 && (
             <button
               onClick={() => isPro ? setScreen('consolidated') : setShowUpgrade(true)}
+              data-tour="combined"
               className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
               style={{
                 backgroundColor: 'var(--surface)',
@@ -434,37 +460,61 @@ export default function App() {
         />
       )}
 
-      {tourStep > 0 && !showAddModal && !showUpgrade && !menuOpen && (
-        <Coachmark
-          step={tourStep === 1 ? TOUR_STEP_CREATE : TOUR_STEP_LOG}
-          onSkip={() => setTourStep(0)}
-          onNext={
-            tourStep === 1
-              ? (activeHabits.length > 0 ? () => setTourStep(2) : undefined)
-              : () => setTourStep(0)
-          }
-          nextLabel={tourStep === 2 ? 'Done' : 'Next'}
-        />
-      )}
+      {coachmark}
     </div>
   )
 }
 
-const TOUR_STEP_CREATE: TourStep = {
-  selector: '[data-tour="add-fab"]',
-  title: 'Create your first habit',
-  body: 'Tap the + button and name something you want to do every day.',
-  index: 1,
-  total: 2,
-}
-
-const TOUR_STEP_LOG: TourStep = {
-  selector: '[data-tour="log-checkbox"]',
-  title: 'Log today',
-  body: 'Tap the box to mark it done — watch the square light up.',
-  index: 2,
-  total: 2,
-}
+const TOUR_STEPS: TourStep[] = [
+  {
+    screen: 'grid',
+    selector: '[data-tour="add-fab"]',
+    title: 'Create your first habit',
+    body: 'Tap the + button and name something you want to do every day.',
+    index: 1,
+    total: 6,
+  },
+  {
+    screen: 'grid',
+    selector: '[data-tour="log-checkbox"]',
+    title: 'Log today',
+    body: 'Tap the box to mark it done — watch the square light up.',
+    index: 2,
+    total: 6,
+  },
+  {
+    screen: 'grid',
+    selector: '[data-tour="combined"]',
+    title: 'See everything at once',
+    body: 'Pro merges all your habits into one grid — then share it as an image.',
+    index: 3,
+    total: 6,
+  },
+  {
+    screen: 'settings',
+    selector: '[data-tour="colours"]',
+    title: 'Make it yours',
+    body: 'Pro unlocks the full colour palette and a custom picker for your grid.',
+    index: 4,
+    total: 6,
+  },
+  {
+    screen: 'settings',
+    selector: '[data-tour="backup"]',
+    title: 'Keep your data safe',
+    body: 'Everything lives on this device. Export a backup and restore it on any other.',
+    index: 5,
+    total: 6,
+  },
+  {
+    screen: 'settings',
+    selector: '[data-tour="pro"]',
+    title: 'Unlock Pro — and keep it',
+    body: 'A one-time $4.99 unlocks it all. Your license key re-activates Pro on any device.',
+    index: 6,
+    total: 6,
+  },
+]
 
 function FAB({ onPress }: { onPress: () => void }) {
   return (

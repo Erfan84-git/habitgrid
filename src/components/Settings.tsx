@@ -120,6 +120,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
           HABITGRID PRO
         </p>
         <div
+          data-tour="pro"
           className="rounded-xl px-4 py-4 mb-6"
           style={{ backgroundColor: 'var(--surface)', border: `1px solid ${isPro ? 'var(--accent)' : 'var(--border)'}` }}
         >
@@ -191,6 +192,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
           APPEARANCE
         </p>
         <div
+          data-tour="colours"
           className="rounded-xl px-4 py-4 mb-6"
           style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
         >
@@ -296,6 +298,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
           BACKUP & RESTORE
         </p>
         <div
+          data-tour="backup"
           className="rounded-xl px-4 py-4 mb-2"
           style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
         >
