@@ -32,6 +32,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
   const [keyInput, setKeyInput] = useState('')
   const [keyStatus, setKeyStatus] = useState<'idle' | 'loading' | 'error'>('idle')
   const [keyError, setKeyError] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<Habit | null>(null)
 
   const handleActivateKey = useCallback(async () => {
     const trimmed = keyInput.trim()
@@ -304,7 +305,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
                 key={habit.id}
                 habit={habit}
                 onRename={(name) => renameHabit(habit.id, name)}
-                onDelete={() => deleteHabit(habit.id)}
+                onDelete={() => setConfirmDelete(habit)}
                 onDragStart={() => handleDragStart(idx)}
                 onDragEnter={() => handleDragEnter(idx)}
                 onDragEnd={handleDragEnd}
@@ -450,6 +451,42 @@ export default function Settings({ onBack, onReplayTour }: Props) {
           onClose={() => setShowUpgrade(false)}
           onUpgrade={() => setShowUpgrade(false)}
         />
+      )}
+
+      {confirmDelete && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setConfirmDelete(null) }}
+        >
+          <div
+            className="w-full sm:max-w-sm rounded-t-2xl sm:rounded-2xl px-5 pt-6 pb-8"
+            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
+            <h2 className="text-base font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              Delete “{confirmDelete.name}”?
+            </h2>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
+              This removes the habit and its entire grid history. This can’t be undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmDelete(null)}
+                className="flex-1 py-2.5 rounded-lg text-sm font-medium"
+                style={{ backgroundColor: 'transparent', border: '1px solid var(--border-muted)', color: 'var(--text-secondary)', cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { deleteHabit(confirmDelete.id); setConfirmDelete(null) }}
+                className="flex-1 py-2.5 rounded-lg text-sm font-medium"
+                style={{ backgroundColor: '#ff7b72', color: '#000', border: 'none', cursor: 'pointer' }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
