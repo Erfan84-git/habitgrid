@@ -106,59 +106,6 @@ export default function Profile({ onBack }: Props) {
           Used to greet you on the home screen. Saves automatically.
         </p>
 
-        {/* Habits */}
-        <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
-          HABITS
-        </p>
-        {activeHabitsList.length === 0 ? (
-          <p className="text-sm text-center py-8" style={{ color: 'var(--text-secondary)' }}>
-            No habits yet — tap + on the home screen to add one.
-          </p>
-        ) : (
-          <div className="flex flex-col gap-2">
-            {activeHabitsList.map((habit, idx) => (
-              <HabitRow
-                key={habit.id}
-                habit={habit}
-                onRename={(n) => renameHabit(habit.id, n)}
-                onDelete={() => setConfirmDelete(habit)}
-                onDragStart={() => handleDragStart(idx)}
-                onDragEnter={() => handleDragEnter(idx)}
-                onDragEnd={handleDragEnd}
-              />
-            ))}
-          </div>
-        )}
-        <p className="text-xs mt-4 mb-6" style={{ color: 'var(--text-secondary)' }}>
-          {isPro ? `${activeHabitsList.length} habits` : `${activeHabitsList.length}/${FREE_HABIT_LIMIT} habits — upgrade for unlimited`}
-        </p>
-
-        {/* Stats */}
-        <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
-          YOUR PROGRESS
-        </p>
-        <div
-          className="rounded-xl px-4 py-4 mb-6"
-          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
-        >
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            {stats.map((s) => (
-              <div key={s.label}>
-                <p
-                  className="text-2xl font-semibold font-mono"
-                  style={{ color: s.accent ? 'var(--accent)' : 'var(--text-primary)' }}
-                >
-                  {s.value}
-                </p>
-                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{s.label}</p>
-              </div>
-            ))}
-          </div>
-          <p className="text-xs mt-4" style={{ color: 'var(--text-secondary)' }}>
-            Active days and streaks count any day you logged at least one habit.
-          </p>
-        </div>
-
         {/* Appearance */}
         <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
           APPEARANCE
@@ -274,6 +221,59 @@ export default function Profile({ onBack }: Props) {
             </p>
           )}
         </div>
+
+        {/* Stats */}
+        <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
+          YOUR PROGRESS
+        </p>
+        <div
+          className="rounded-xl px-4 py-4 mb-6"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            {stats.map((s) => (
+              <div key={s.label}>
+                <p
+                  className="text-2xl font-semibold font-mono"
+                  style={{ color: s.accent ? 'var(--accent)' : 'var(--text-primary)' }}
+                >
+                  {s.value}
+                </p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{s.label}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs mt-4" style={{ color: 'var(--text-secondary)' }}>
+            Active days and streaks count any day you logged at least one habit.
+          </p>
+        </div>
+
+        {/* Habits */}
+        <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
+          HABITS
+        </p>
+        {activeHabitsList.length === 0 ? (
+          <p className="text-sm text-center py-8" style={{ color: 'var(--text-secondary)' }}>
+            No habits yet — tap + on the home screen to add one.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {activeHabitsList.map((habit, idx) => (
+              <HabitRow
+                key={habit.id}
+                habit={habit}
+                onRename={(n) => renameHabit(habit.id, n)}
+                onDelete={() => setConfirmDelete(habit)}
+                onDragStart={() => handleDragStart(idx)}
+                onDragEnter={() => handleDragEnter(idx)}
+                onDragEnd={handleDragEnd}
+              />
+            ))}
+          </div>
+        )}
+        <p className="text-xs mt-4 mb-6" style={{ color: 'var(--text-secondary)' }}>
+          {isPro ? `${activeHabitsList.length} habits` : `${activeHabitsList.length}/${FREE_HABIT_LIMIT} habits — upgrade for unlimited`}
+        </p>
       </div>
 
       {showUpgrade && (
