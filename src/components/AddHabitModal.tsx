@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useStore } from '../store'
+import { useStore, NAME_MAX } from '../store'
 
 interface Props {
   onClose: () => void
@@ -47,24 +47,37 @@ export default function AddHabitModal({ onClose, onAdded }: Props) {
           </button>
         </div>
 
-        <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-          NAME
-        </label>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="block text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+            NAME
+          </label>
+          <span
+            className="text-xs font-mono"
+            style={{ color: name.length >= NAME_MAX ? '#ff7b72' : 'var(--text-secondary)' }}
+          >
+            {name.length}/{NAME_MAX}
+          </span>
+        </div>
         <input
           type="text"
           value={name}
           onChange={(e) => { setName(e.target.value); setError('') }}
           onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
           placeholder="e.g. No sugar, Gym, Read"
-          maxLength={40}
+          maxLength={NAME_MAX}
           autoFocus
-          className="w-full px-3 py-2.5 rounded-lg text-sm outline-none mb-4"
+          className="w-full px-3 py-2.5 rounded-lg text-sm outline-none mb-1.5"
           style={{
             backgroundColor: 'var(--bg)',
             border: '1px solid var(--border-muted)',
             color: 'var(--text-primary)',
           }}
         />
+        <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+          {name.length >= NAME_MAX
+            ? 'Keep names short — add the details in notes below.'
+            : 'Short and punchy works best — use notes for more.'}
+        </p>
 
         <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
           NOTES <span style={{ fontWeight: 400 }}>(optional)</span>

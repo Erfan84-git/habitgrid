@@ -17,6 +17,7 @@ export interface StreakInfo {
 }
 
 export const FREE_HABIT_LIMIT = 3
+export const NAME_MAX = 30
 
 interface HabitStore {
   habits: Habit[]
@@ -111,7 +112,7 @@ export const useStore = create<HabitStore>()(
           if (!s.isPro && activeCount >= FREE_HABIT_LIMIT) return s
           const habit: Habit = {
             id: `h${Date.now()}`,
-            name: name.trim(),
+            name: name.trim().slice(0, NAME_MAX),
             notes,
             createdAt: new Date().toISOString(),
             active: true,
