@@ -145,7 +145,7 @@ export default function Settings({ onBack, onReplayTour }: Props) {
                     {licenseKey.slice(0, 8)}••••••••
                   </p>
                   <p className="text-xs mt-1.5" style={{ color: 'var(--text-secondary)', opacity: 0.8 }}>
-                    Keep it safe — it re-activates Pro on any device.
+                    Keep it safe — it re-unlocks Pro on any device. It doesn't store your habits; back those up separately.
                   </p>
                 </div>
               )}
@@ -230,6 +230,43 @@ export default function Settings({ onBack, onReplayTour }: Props) {
         <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
           BACKUP & RESTORE
         </p>
+
+        {/* How it works — make the data vs Pro distinction obvious */}
+        <div
+          className="rounded-xl px-4 py-4 mb-3"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>How HabitGrid keeps your data</p>
+          <p className="text-xs mb-3" style={{ color: 'var(--text-secondary)' }}>
+            Everything is stored on this phone — no account, no cloud sync. That means two separate things move with you:
+          </p>
+
+          <div className="flex items-start gap-3 mb-2.5">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0, marginTop: 1, color: 'var(--accent)' }}>
+              <path d="M2 5a1.5 1.5 0 011.5-1.5h3l1.5 1.5h6A1.5 1.5 0 0115.5 6.5v6A1.5 1.5 0 0114 14H3.5A1.5 1.5 0 012 12.5V5z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+            </svg>
+            <p className="text-xs" style={{ color: 'var(--text-primary)' }}>
+              <span className="font-semibold">Your history</span> (habits, grids, streaks) lives only on this device. A <span className="font-semibold">backup file</span> is the only copy — it's what moves your data to a new phone.
+            </p>
+          </div>
+
+          <div className="flex items-start gap-3 mb-3">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0, marginTop: 1, color: 'var(--accent)' }}>
+              <circle cx="6" cy="9" r="3" stroke="currentColor" strokeWidth="1.4" />
+              <path d="M8.5 9H16M13.5 9v2.5M11 9v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+            </svg>
+            <p className="text-xs" style={{ color: 'var(--text-primary)' }}>
+              <span className="font-semibold">Your license key</span> only re-unlocks <span className="font-semibold">Pro</span>. It does <span className="font-semibold">not</span> carry your habits or history.
+            </p>
+          </div>
+
+          <div className="rounded-lg px-3 py-2.5" style={{ backgroundColor: 'var(--bg)', border: `1px solid ${'#e3b341'}55` }}>
+            <p className="text-xs" style={{ color: 'var(--text-primary)' }}>
+              <span className="font-semibold">Switching phones?</span> You need both — restore your backup to get your history back, then enter your license key to re-unlock Pro.
+            </p>
+          </div>
+        </div>
+
         <div
           data-tour="backup"
           className="rounded-xl px-4 py-4 mb-2"

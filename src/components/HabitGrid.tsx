@@ -53,6 +53,11 @@ export default function HabitGrid({ habitId, period, accentColor, onToggle }: Pr
       const d = new Date(today.getFullYear(), today.getMonth() - i, 1)
       blocks.push(buildMonthBlock(d.getFullYear(), d.getMonth()))
     }
+    // Drop the current month's all-future weeks so the grid ends at today
+    // instead of reserving empty space for days that can't be logged yet.
+    const todayStr = formatDate(today)
+    const last = blocks[blocks.length - 1]
+    last.columns = last.columns.filter((col) => col.some((cell) => cell !== null && cell.date <= todayStr))
   } else {
     for (let m = 0; m < 12; m++) {
       blocks.push(buildMonthBlock(period as number, m))
