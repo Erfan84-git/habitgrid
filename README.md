@@ -15,19 +15,21 @@ A GitHub/LeetCode-style habit tracker PWA. Build streaks, visualise consistency,
 
 ## Features
 
-- **Contribution grids** — each habit gets its own month-block grid, styled after LeetCode's dark-mode palette
+- **Contribution grids** — each habit gets its own month-block grid, GitHub/LeetCode-style
+- **Light & dark themes** — toggle in Profile; the whole app and grids adapt instantly
 - **Per-habit check-in** — tap the checkbox next to a habit name to log today; the cell fills instantly
-- **Backdate yesterday** — missed logging last night? tap yesterday's cell to fill it in
+- **Backdate yesterday** — missed logging last night? tap yesterday's cell (only yesterday — forgiving, not gameable)
 - **Stats per habit** — active days, current streak, and max streak shown inline on every card
-- **Year selector** — switch between the rolling 12-month view and any past calendar year
-- **Combined grid** — merge all habits into one intensity-shaded grid (darker = fewer habits done, brighter = all done)
+- **Year view** — a rolling 12-month "Current" view, or jump to a full calendar year (2025 onward; the current year stops at today)
+- **Combined grid** — merge all habits into one intensity-shaded grid, darker = fewer done, brighter = all done (Pro)
 - **Share as PNG** — exports a clean card image via the native share sheet; falls back to download on desktop
-- **Custom accent colour** — pick from 8 presets or use the native colour picker; the grid, UI, and splash all update instantly
-- **Splash screen** — black background with a flickering matrix of the current month's grid on every launch
+- **Custom accent colour** — default green is free; Pro unlocks 8 presets + a custom picker. The grid, UI, and splash all update instantly
+- **Guided onboarding** — a welcome screen plus an interactive tour that walks new users through creating a habit and logging progress
+- **Profile** — your name, theme, grid colour, a progress summary (active days, streaks), and habit management: rename, reorder, and delete (with confirmation)
+- **Splash screen** — a flickering matrix of the current month's grid on every launch
 - **Private notes** — attach a personal memo to each habit; stored locally, never shown publicly
-- **Profile** — set your name to personalise the greeting
 - **Backup & restore** — export your data as a JSON file; restore on any device
-- **Installable PWA** — add to home screen on iOS/Android for a native-feeling experience
+- **Installable PWA** — add to home screen on iOS/Android/desktop; renders as a centered, phone-width app on larger screens
 
 ---
 
@@ -39,6 +41,8 @@ HabitGrid is free for up to 3 habits. **HabitGrid Pro** ($4.99, one-time) unlock
 - Full colour palette + custom picker
 - Combined grid view
 
+HabitGrid is local-first, so Pro status and your data travel separately: a one-time **license key** re-unlocks Pro on any device, while a **backup file** carries your history. When you switch phones you need both — restore the backup, then re-enter the key.
+
 ---
 
 ## Screenshots
@@ -47,8 +51,8 @@ HabitGrid is free for up to 3 habits. **HabitGrid Pro** ($4.99, one-time) unlock
 |--------|-----------|-----------|----------|
 | ![Splash](screenshots/1-splash.png) | ![Main](screenshots/2-main-grid.png) | ![Add](screenshots/3-add-habit.png) | ![Combined](screenshots/4-consolidated.png) |
 
-| Settings (colour picker) | Profile |
-|--------------------------|---------|
+| Settings | Profile (theme, colour, progress, habits) |
+|----------|-------------------------------------------|
 | ![Settings](screenshots/5-settings.png) | ![Profile](screenshots/6-profile.png) |
 
 ---
@@ -97,9 +101,9 @@ npm run preview    # preview the built PWA locally
 
 ## Data & privacy
 
-Everything lives in your browser's `localStorage` under the key `habitgrid-storage`. The only data that ever leaves your device is your license key — sent once to verify your Pro purchase. Nothing else is sent to any server.
+Everything lives in your browser's `localStorage` under the key `habitgrid-storage` — no account, no cloud sync. The only data that ever leaves your device is your license key, sent once to verify your Pro purchase. Nothing else is sent to any server.
 
-[Full privacy policy →](https://habitgrid.vercel.app/privacy.html)
+[Full privacy policy →](https://habitgrid-steel.vercel.app/privacy.html)
 
 ---
 
@@ -109,8 +113,11 @@ Everything lives in your browser's `localStorage` under the key `habitgrid-stora
 - [x] GitHub-style contribution grids per habit
 - [x] Combined intensity grid across all habits
 - [x] Share progress as PNG
+- [x] Light & dark themes
 - [x] Custom accent colour theming
 - [x] Backdate up to yesterday
+- [x] Guided onboarding — welcome screen + interactive tour
+- [x] Habit management — rename, reorder, delete (with confirmation)
 - [x] Backup & restore (JSON export/import)
 - [x] HabitGrid Pro — freemium with Dodo Payments
 
