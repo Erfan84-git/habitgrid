@@ -1,24 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface Props {
   onDone: () => void
   accentColor: string
 }
 
-// A static 7×4 contribution grid that reads like a real ~47-day streak.
-// 2 = bright (done), 1 = medium, 0 = empty. ~80% bright, ~15% medium, ~5% empty.
-const GRID_LEVELS = [
-  2, 2, 2, 1, 2, 2, 2,
-  2, 1, 2, 2, 2, 2, 0,
-  2, 2, 2, 0, 2, 1, 2,
-  1, 2, 2, 2, 2, 2, 2,
-]
-
-function levelOpacity(level: number) {
-  if (level === 2) return 1
-  if (level === 1) return 0.45
-  return 0.12
-}
+// A 7×4 contribution grid that flickers like the splash screen, using the
+// same accent-opacity palette.
+const GRID_CELLS = 28
+const OPACITIES = [0.06, 0.12, 0.22, 0.38, 0.58, 0.78, 1.0]
+const randLevel = () => Math.floor(Math.random() * OPACITIES.length)
 
 export default function OnboardingScreen({ onDone, accentColor }: Props) {
   // Show an "Add to Home Screen" hint only on iOS Safari that isn't installed.
@@ -28,6 +19,15 @@ export default function OnboardingScreen({ onDone, accentColor }: Props) {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     return isIOS && !isStandalone
   })
+
+  // Flicker the hero grid, matching the splash screen's matrix animation.
+  const [levels, setLevels] = useState<number[]>(() => Array.from({ length: GRID_CELLS }, randLevel))
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setLevels((prev) => prev.map((l) => (Math.random() > 0.65 ? randLevel() : l)))
+    }, 120)
+    return () => window.clearInterval(id)
+  }, [])
 
   return (
     <div
@@ -72,7 +72,7 @@ export default function OnboardingScreen({ onDone, accentColor }: Props) {
               gap: '6px',
             }}
           >
-            {GRID_LEVELS.map((level, i) => (
+            {levels.map((level, i) => (
               <div
                 key={i}
                 style={{
@@ -80,7 +80,7 @@ export default function OnboardingScreen({ onDone, accentColor }: Props) {
                   height: 30,
                   borderRadius: 7,
                   backgroundColor: accentColor,
-                  opacity: levelOpacity(level),
+                  opacity: OPACITIES[level],
                 }}
               />
             ))}
