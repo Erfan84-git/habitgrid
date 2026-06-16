@@ -1,12 +1,34 @@
 import { useState } from 'react'
-import type { ReactNode } from 'react'
 
 interface Props {
   onDone: () => void
   accentColor: string
 }
 
+// A static 7×4 contribution grid that reads like a real ~47-day streak.
+// 2 = bright (done), 1 = medium, 0 = empty. ~80% bright, ~15% medium, ~5% empty.
+const GRID_LEVELS = [
+  2, 2, 2, 1, 2, 2, 2,
+  2, 1, 2, 2, 2, 2, 0,
+  2, 2, 2, 0, 2, 1, 2,
+  1, 2, 2, 2, 2, 2, 2,
+]
+
+function levelOpacity(level: number) {
+  if (level === 2) return 1
+  if (level === 1) return 0.45
+  return 0.12
+}
+
 export default function OnboardingScreen({ onDone, accentColor }: Props) {
+  // Show an "Add to Home Screen" hint only on iOS Safari that isn't installed.
+  const [showIOSBanner, setShowIOSBanner] = useState(() => {
+    if (typeof navigator === 'undefined' || typeof window === 'undefined') return false
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    return isIOS && !isStandalone
+  })
+
   return (
     <div
       className="flex flex-col min-h-dvh px-5"
@@ -36,77 +58,41 @@ export default function OnboardingScreen({ onDone, accentColor }: Props) {
         <p className="text-sm text-center" style={{ color: 'var(--text-secondary)' }}>
           GitHub-style grids for your daily habits
         </p>
-        <p className="text-[11px] text-center mt-2" style={{ color: 'var(--text-secondary)', opacity: 0.7 }}>
-          Tap a card to learn more
-        </p>
       </div>
 
-      {/* Feature grid — 2 columns of flip cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flex: 1 }}>
+      {/* Hero: a filled contribution grid + Pro mention */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '32px' }}>
 
-        <FlipCard accentColor={accentColor}
-          icon={
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <rect x="2" y="6" width="4" height="4" rx="1" fill="currentColor" opacity="0.2"/>
-              <rect x="8" y="6" width="4" height="4" rx="1" fill="currentColor" opacity="0.5"/>
-              <rect x="14" y="6" width="4" height="4" rx="1" fill="currentColor"/>
-              <rect x="20" y="6" width="4" height="4" rx="1" fill="currentColor" opacity="0.7"/>
-              <rect x="2" y="12" width="4" height="4" rx="1" fill="currentColor" opacity="0.7"/>
-              <rect x="8" y="12" width="4" height="4" rx="1" fill="currentColor"/>
-              <rect x="14" y="12" width="4" height="4" rx="1" fill="currentColor" opacity="0.3"/>
-              <rect x="20" y="12" width="4" height="4" rx="1" fill="currentColor"/>
-              <rect x="2" y="18" width="4" height="4" rx="1" fill="currentColor"/>
-              <rect x="8" y="18" width="4" height="4" rx="1" fill="currentColor" opacity="0.5"/>
-              <rect x="14" y="18" width="4" height="4" rx="1" fill="currentColor" opacity="0.7"/>
-              <rect x="20" y="18" width="4" height="4" rx="1" fill="currentColor" opacity="0.4"/>
-            </svg>
-          }
-          label="Add a habit, watch it grow"
-          detail="Name any daily habit — it gets its own grid that lights up brighter with every check-in."
-        />
+        <div className="flex flex-col items-center">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(7, 30px)',
+              gridAutoRows: '30px',
+              gap: '6px',
+            }}
+          >
+            {GRID_LEVELS.map((level, i) => (
+              <div
+                key={i}
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 7,
+                  backgroundColor: accentColor,
+                  opacity: levelOpacity(level),
+                }}
+              />
+            ))}
+          </div>
+          <p className="text-xs mt-4" style={{ color: 'var(--text-secondary)' }}>
+            47 days. No streak broken.
+          </p>
+        </div>
 
-        <FlipCard accentColor={accentColor}
-          icon={
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <rect x="4" y="4" width="10" height="10" rx="2.5" stroke="currentColor" strokeWidth="1.8" fill="none"/>
-              <path d="M6.5 9L9 11.5L13 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              <line x1="18" y1="8" x2="24" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" opacity="0.5"/>
-              <line x1="18" y1="14" x2="24" y2="14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" opacity="0.3"/>
-              <line x1="4" y1="20" x2="24" y2="20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" opacity="0.2"/>
-            </svg>
-          }
-          label="Log it in one tap"
-          detail="Tap once and today's square lights up. Forgot last night? Yesterday's still fair game."
-        />
-
-        <FlipCard accentColor={accentColor}
-          icon={
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <path d="M14 4v12M10 8l4-4 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 18v4a1.5 1.5 0 001.5 1.5h15A1.5 1.5 0 0023 22v-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" opacity="0.5"/>
-            </svg>
-          }
-          label="Flex your grid"
-          detail="Export it as a crisp image and post your streak anywhere — receipts for the work you put in."
-        />
-
-        <FlipCard accentColor={accentColor}
-          icon={
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <path d="M4 14l-.01 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-              <path d="M14 4C8.477 4 4 8.477 4 14s4.477 10 10 10 10-4.477 10-10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" opacity="0.4"/>
-              <path d="M14 4c2 0 6 4.5 6 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-              <line x1="14" y1="9" x2="14" y2="14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-              <line x1="14" y1="14" x2="17" y2="14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-            </svg>
-          }
-          label="Keep the streak alive"
-          detail="Current streak, longest run, and total active days — counting up on every card."
-        />
-
-        {/* Pro card — spans full width, static */}
+        {/* Pro mention */}
         <div
-          className="col-span-2 flex items-center gap-4 px-4 py-4 rounded-xl"
+          className="flex items-center gap-4 px-4 py-4 rounded-xl"
           style={{ backgroundColor: 'var(--surface)', border: `1px solid ${accentColor}33` }}
         >
           <div
@@ -133,6 +119,26 @@ export default function OnboardingScreen({ onDone, accentColor }: Props) {
 
       {/* CTA */}
       <div className="py-6">
+        {showIOSBanner && (
+          <button
+            onClick={() => setShowIOSBanner(false)}
+            className="w-full flex items-center justify-center gap-1.5 mb-3 px-3 py-2.5 rounded-lg text-xs text-center"
+            style={{
+              backgroundColor: 'var(--surface)',
+              border: '1px solid var(--border)',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+            }}
+          >
+            <span>On iPhone? Tap</span>
+            <svg width="12" height="15" viewBox="0 0 14 18" fill="none" style={{ display: 'inline-block', flexShrink: 0 }} aria-label="Share">
+              <path d="M7 2v9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M4 5l3-3 3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M3.5 7.5h-1A1.5 1.5 0 001 9v6.5A1.5 1.5 0 002.5 17h9a1.5 1.5 0 001.5-1.5V9a1.5 1.5 0 00-1.5-1.5h-1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span>Share → Add to Home Screen for the full experience.</span>
+          </button>
+        )}
         <button
           onClick={onDone}
           className="w-full py-4 rounded-xl text-base font-semibold"
@@ -140,51 +146,6 @@ export default function OnboardingScreen({ onDone, accentColor }: Props) {
         >
           Get started
         </button>
-      </div>
-    </div>
-  )
-}
-
-function FlipCard({
-  icon,
-  label,
-  detail,
-  accentColor,
-}: {
-  icon: ReactNode
-  label: string
-  detail: string
-  accentColor: string
-}) {
-  const [flipped, setFlipped] = useState(false)
-  return (
-    <div
-      className={`flip-card${flipped ? ' flipped' : ''}`}
-      style={{ height: 132 }}
-      onClick={() => setFlipped((f) => !f)}
-      role="button"
-      aria-label={`${label}. Tap for details.`}
-    >
-      <div className="flip-card-inner">
-        {/* Front */}
-        <div
-          className="flip-card-face px-3 py-5 rounded-xl text-center gap-3"
-          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
-        >
-          <div style={{ color: accentColor }}>{icon}</div>
-          <p className="text-xs font-medium leading-snug" style={{ color: 'var(--text-primary)' }}>
-            {label}
-          </p>
-        </div>
-        {/* Back */}
-        <div
-          className="flip-card-face flip-card-back px-3 py-4 rounded-xl text-center"
-          style={{ backgroundColor: 'var(--surface)', border: `1px solid ${accentColor}55` }}
-        >
-          <p className="text-[12px] leading-snug" style={{ color: 'var(--text-secondary)' }}>
-            {detail}
-          </p>
-        </div>
       </div>
     </div>
   )
