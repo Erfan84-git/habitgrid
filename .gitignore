@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Local dev/test scratch scripts (Playwright debug, e2e, Dodo inspection)
+debug-*.mjs
+e2e-*.mjs
+inspect-dodo*.mjs
+take-e2e-test.mjs
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
