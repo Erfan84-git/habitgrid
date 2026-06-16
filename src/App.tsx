@@ -371,7 +371,7 @@ export default function App() {
       )}
 
       {activeHabits.length > 0 ? (
-        <div className="flex flex-col gap-4 px-4 pb-24 min-w-0">
+        <div className="flex flex-col gap-4 px-4 mt-3 pb-24 min-w-0">
           {activeHabits.map((habit, i) => (
             <HabitCard
               key={habit.id}
