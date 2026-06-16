@@ -191,7 +191,8 @@ export default function App() {
       !tourBaseline.current.logged &&
       activeHabits.some((h) => logs[todayStr]?.[h.id])
     ) {
-      setTourStep(3)
+      // Step 2 is the last step — end the tour when they log
+      setTourStep(0)
     }
   }, [tourStep, logs, todayStr])
 
@@ -468,50 +469,18 @@ const TOUR_STEPS: TourStep[] = [
   {
     screen: 'grid',
     selector: '[data-tour="add-fab"]',
-    title: 'Create your first habit',
-    body: 'Tap the + button and name something you want to do every day.',
+    title: 'Add your first habit',
+    body: 'Tap + and give it a name. Something you want to do every day.',
     index: 1,
-    total: 6,
+    total: 2,
   },
   {
     screen: 'grid',
     selector: '[data-tour="log-checkbox"]',
     title: 'Log today',
-    body: 'Tap the box to mark it done — watch the square light up.',
+    body: 'Tap the box to mark it done — the square lights up instantly.',
     index: 2,
-    total: 6,
-  },
-  {
-    screen: 'grid',
-    selector: '[data-tour="combined"]',
-    title: 'See everything at once',
-    body: 'Pro merges all your habits into one grid — then share it as an image.',
-    index: 3,
-    total: 6,
-  },
-  {
-    screen: 'profile',
-    selector: '[data-tour="colours"]',
-    title: 'Make it yours',
-    body: 'In Profile, Pro unlocks the full colour palette and a custom picker for your grid.',
-    index: 4,
-    total: 6,
-  },
-  {
-    screen: 'settings',
-    selector: '[data-tour="backup"]',
-    title: 'Keep your data safe',
-    body: 'Everything lives on this device. Export a backup and restore it on any other.',
-    index: 5,
-    total: 6,
-  },
-  {
-    screen: 'settings',
-    selector: '[data-tour="pro"]',
-    title: 'Unlock Pro — and keep it',
-    body: 'A one-time $4.99 unlocks it all. Your license key re-activates Pro on any device.',
-    index: 6,
-    total: 6,
+    total: 2,
   },
 ]
 
