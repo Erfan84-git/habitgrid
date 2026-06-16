@@ -7,7 +7,6 @@ import AddHabitModal from './components/AddHabitModal'
 import SplashScreen from './components/SplashScreen'
 import ConsolidatedView from './components/ConsolidatedView'
 import UpgradeModal from './components/UpgradeModal'
-import OnboardingScreen from './components/OnboardingScreen'
 import { Coachmark, type TourStep } from './components/GuidedTour'
 import { exportBackup, daysSinceBackup } from './utils/backup'
 
@@ -221,14 +220,12 @@ export default function App() {
   ) : null
 
   if (showSplash) {
-    return <SplashScreen onDone={() => setShowSplash(false)} accentColor={accentColor} />
-  }
-
-  if (!hasSeenOnboarding) {
     return (
-      <OnboardingScreen
-        onDone={() => { setHasSeenOnboarding(); setTourStep(1) }}
-        accentColor={safeAccent}
+      <SplashScreen
+        firstRun={!hasSeenOnboarding}
+        accentColor={accentColor}
+        onDone={() => setShowSplash(false)}
+        onStart={() => { setHasSeenOnboarding(); setShowSplash(false); setTourStep(1); setShowAddModal(true) }}
       />
     )
   }
