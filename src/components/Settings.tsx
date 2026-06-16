@@ -78,7 +78,7 @@ export default function Settings({ onBack }: Props) {
           Back
         </button>
         <h1 className="text-base font-semibold mx-auto" style={{ color: 'var(--text-primary)' }}>
-          Settings
+          Pro & Backup
         </h1>
         <div style={{ width: '52px' }} />
       </header>

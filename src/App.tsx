@@ -3,6 +3,7 @@ import { useStore, getHabitStats, formatDate, FREE_HABIT_LIMIT } from './store'
 import HabitGrid from './components/HabitGrid'
 import Settings from './components/Settings'
 import Profile from './components/Profile'
+import Appearance from './components/Appearance'
 import AddHabitModal from './components/AddHabitModal'
 import SplashScreen from './components/SplashScreen'
 import ConsolidatedView from './components/ConsolidatedView'
@@ -10,7 +11,7 @@ import UpgradeModal from './components/UpgradeModal'
 import { Coachmark, type TourStep } from './components/GuidedTour'
 import { exportBackup, daysSinceBackup } from './utils/backup'
 
-type Screen = 'grid' | 'settings' | 'profile' | 'consolidated'
+type Screen = 'grid' | 'settings' | 'profile' | 'appearance' | 'consolidated'
 type Period = 'current' | number
 
 function HamburgerIcon() {
@@ -249,6 +250,15 @@ export default function App() {
     )
   }
 
+  if (screen === 'appearance') {
+    return (
+      <>
+        <Appearance onBack={() => setScreen('grid')} />
+        {coachmark}
+      </>
+    )
+  }
+
   if (screen === 'consolidated') {
     return <ConsolidatedView period={period} onBack={() => setScreen('grid')} />
   }
@@ -314,8 +324,9 @@ export default function App() {
                 }}
               >
                 {[
-                  { label: 'Profile', s: 'profile' as Screen },
-                  { label: 'Settings', s: 'settings' as Screen },
+                  { label: 'My Habits', s: 'profile' as Screen },
+                  { label: 'Appearance', s: 'appearance' as Screen },
+                  { label: 'Pro & Backup', s: 'settings' as Screen },
                 ].map(({ label, s }) => (
                   <button
                     key={s}
