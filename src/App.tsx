@@ -9,6 +9,7 @@ import SplashScreen from './components/SplashScreen'
 import ConsolidatedView from './components/ConsolidatedView'
 import UpgradeModal from './components/UpgradeModal'
 import { Coachmark, type TourStep } from './components/GuidedTour'
+import NotesSheet from './components/NotesSheet'
 import { exportBackup, daysSinceBackup } from './utils/backup'
 
 type Screen = 'grid' | 'settings' | 'profile' | 'appearance' | 'consolidated'
@@ -31,6 +32,7 @@ function HabitCard({
   period,
   accentColor,
   isFirst,
+  onOpenNotes,
 }: {
   habitId: string
   name: string
@@ -38,6 +40,7 @@ function HabitCard({
   period: Period
   accentColor: string
   isFirst?: boolean
+  onOpenNotes: () => void
 }) {
   const { logs, toggleLog } = useStore()
   const { activeDays, currentStreak, maxStreak } = getHabitStats(logs, habitId, period)
@@ -79,10 +82,25 @@ function HabitCard({
         )}
         <span
           className="text-sm font-semibold truncate"
-          style={{ color: checked ? 'var(--accent)' : 'var(--text-primary)' }}
+          style={{ color: checked ? 'var(--accent)' : 'var(--text-primary)', flex: 1 }}
         >
           {name}
         </span>
+        <button
+          onClick={onOpenNotes}
+          aria-label={`Notes for ${name}`}
+          title="Day notes"
+          style={{
+            flexShrink: 0, background: 'none', border: 'none',
+            cursor: 'pointer', padding: '2px 0 2px 6px',
+            color: 'var(--text-secondary)', opacity: 0.7,
+          }}
+        >
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="1.5" width="12" height="13" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M5 5.5h6M5 8h6M5 10.5h4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+          </svg>
+        </button>
       </div>
 
       {/* Stats row */}
@@ -127,6 +145,7 @@ export default function App() {
   const [showSplash, setShowSplash] = useState(true)
   const [showUpgrade, setShowUpgrade] = useState(false)
   const [dismissedBackupBanner, setDismissedBackupBanner] = useState(false)
+  const [notesHabitId, setNotesHabitId] = useState<string | null>(null)
   // Guided tour: 0 = inactive, 1 = create a habit, 2 = log progress
   const [tourStep, setTourStep] = useState(0)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -393,6 +412,7 @@ export default function App() {
               period={period}
               accentColor={accentColor}
               isFirst={i === 0}
+              onOpenNotes={() => setNotesHabitId(habit.id)}
             />
           ))}
           {activeHabits.length >= 2 && (
@@ -470,6 +490,17 @@ export default function App() {
           onUpgrade={() => setShowUpgrade(false)}
         />
       )}
+
+      {notesHabitId && (() => {
+        const habit = habits.find((h) => h.id === notesHabitId)
+        return habit ? (
+          <NotesSheet
+            habitId={notesHabitId}
+            habitName={habit.name}
+            onClose={() => setNotesHabitId(null)}
+          />
+        ) : null
+      })()}
 
       {coachmark}
     </div>

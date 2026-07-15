@@ -10,6 +10,7 @@ export interface Habit {
 }
 
 export type Logs = Record<string, Record<string, boolean>>
+export type DayNotes = Record<string, Record<string, string>> // [habitId][date]
 
 export interface StreakInfo {
   current: number
@@ -22,6 +23,7 @@ export const NAME_MAX = 30
 interface HabitStore {
   habits: Habit[]
   logs: Logs
+  dayNotes: DayNotes
   streak: StreakInfo
   accentColor: string
   theme: 'dark' | 'light'
@@ -40,6 +42,7 @@ interface HabitStore {
   reorderHabits: (habits: Habit[]) => void
   toggleLog: (date: string, habitId: string) => void
   recalculateStreak: () => void
+  setDayNote: (habitId: string, date: string, text: string) => void
   setAccentColor: (color: string) => void
   setTheme: (theme: 'dark' | 'light') => void
   setUserName: (name: string) => void
@@ -96,6 +99,7 @@ export const useStore = create<HabitStore>()(
     (set, get) => ({
       habits: [],
       logs: {},
+      dayNotes: {},
       streak: { current: 0, longest: 0 },
       accentColor: '#39d353',
       theme: 'dark',
@@ -158,6 +162,18 @@ export const useStore = create<HabitStore>()(
       recalculateStreak: () => {
         const streak = calcStreak(get().logs)
         set({ streak })
+      },
+
+      setDayNote: (habitId, date, text) => {
+        set((s) => {
+          const habitNotes = { ...(s.dayNotes[habitId] ?? {}) }
+          if (text.trim()) {
+            habitNotes[date] = text.trim()
+          } else {
+            delete habitNotes[date]
+          }
+          return { dayNotes: { ...s.dayNotes, [habitId]: habitNotes } }
+        })
       },
 
       setAccentColor: (color) => set({ accentColor: color }),
