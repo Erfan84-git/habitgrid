@@ -28,7 +28,7 @@ interface HabitStore {
   accentColor: string
   theme: 'dark' | 'light'
   userName: string
-  isPro: true
+  isPro: boolean
   licenseKey: string | null
   lastBackedUp: string | null
   hasSeenOnboarding: boolean
