@@ -28,7 +28,7 @@ interface HabitStore {
   accentColor: string
   theme: 'dark' | 'light'
   userName: string
-  isPro: boolean
+  isPro: true
   licenseKey: string | null
   lastBackedUp: string | null
   hasSeenOnboarding: boolean
@@ -104,7 +104,7 @@ export const useStore = create<HabitStore>()(
       accentColor: '#39d353',
       theme: 'dark',
       userName: '',
-      isPro: false,
+      isPro: true,
       licenseKey: null,
       lastBackedUp: null,
       hasSeenOnboarding: false,
